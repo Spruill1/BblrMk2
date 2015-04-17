@@ -33,7 +33,7 @@
       }
     </script>
     <style type="text/css">
-    #textL, #textR, #helicopter_but, #simplepath_but {
+    #textL, #textR, #Ava_but, #Ava, #simplepath_but {
         float: left;
     }</style>
   </head>
@@ -66,10 +66,17 @@
       </div>
       <div id="page3" style="display: none;">
         Installed Games:
-        <p><button id="helicopter_but" class="btn btn-primary" onclick="document.getElementById('helicopter').style.display = 'block'; document.getElementById('simple_path').style.display = 'none'">Helicopter</button></p>
-        <p><button id="simplepath_but" class="btn btn-primary" onclick="document.getElementById('simple_path').style.display = 'block'; document.getElementById('helicopter').style.display = 'none'">SimplePath</button></p>
-        <br><br>
-        <div id="helicopter" style="display: none"> unimplemented</div>
+        <p><button id="Ava_but" class="btn btn-primary" onclick="document.getElementById('Ava').style.display = 'block'; document.getElementById('simple_path').style.display = 'none'">Avalanche</button></p>
+        <p><button id="simplepath_but" class="btn btn-primary" onclick="document.getElementById('simple_path').style.display = 'block'; document.getElementById('Ava').style.display = 'none'">SimplePath</button></p>
+        <br><br><br>
+        <div id="Ava" style="display: none">
+          <button id="Ava_start_but" class="btn btn-primary" onclick="socket.emit('ave_start');" style="height: 25px; width: 100px">Start Game </button>
+          <button id="Ava_exit_but" class="btn btn-primary" onclick="socket.emit('ave_exit');" style="height: 25px; width: 100px">Quit Game  </button>
+          <br><br>
+          <button id="Ava_left_but" class="btn btn-primary" onclick="socket.emit('ave_left');" style="height: 25px; width: 100px">Left       </button>
+          <button id="Ava_right_but" class="btn btn-primary" onclick="socket.emit('ave_right');" style="height: 25px; width: 100px">Right      </button>
+          
+        </div>
         <div id="simple_path" style="display: none">
           <input type="range" min = "0" max = "23" value = "11" oninput="socket.emit('game1_control',{value: this.value})">
         </div>
@@ -85,7 +92,7 @@
     <br>
     <br>
     <div id="textL">Status: </div>
-    <div id="textR">Not Connected </div>  
+    <div id="textR">Not Connected </div>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -95,7 +102,7 @@
 
           var socket = io.connect('http://10.190.85.152:80/'); <!-- change to local ip -->
 
-          socket.on('connect', function(){$('#textR').value='connected'})
+          socket.on('connect', function(){$document.getElementById('textR').value='connected'})
 
           $('#led1').on('click',function(){
             var tmp = 0;
