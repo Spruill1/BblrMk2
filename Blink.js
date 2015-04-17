@@ -26,7 +26,7 @@ var sp = new SerialPort("/dev/ttyACM0", {
 sp.on("open", function () {
   console.log('open');
   sp.on('data', function(data) {
-    console.log('data received: ' + data);
+    console.log('data received: ' + (new Uint8Array(data))[0].toString());
   });
 });
 
@@ -35,7 +35,8 @@ app.io.sockets.on('connection',function(socket){
   console.log('connection established');
 
   socket.on('message',function(data){
-    console.log('text received: '+data);
+    var t = new UInt8Array(data);
+    console.log('text received: '+t[0]);
     sp.write(data);
   });
 
@@ -59,7 +60,7 @@ app.io.sockets.on('connection',function(socket){
   socket.on('ave_start',function(){
 	console.log('Starting Avalanche');
 	sp.write('A');
-	cut[0]=(ave_player & 0x3F);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
+	cut[0]=(ave_player & 0xFF);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
 	sp.write(cut); 
   });
   socket.on('ave_exit',function(){
@@ -68,14 +69,14 @@ app.io.sockets.on('connection',function(socket){
   });
   socket.on('ave_left',function(){
 	console.log('Avalanche: Move Left');  
-	ave_player << 1;
-	cut[0]=(ave_player & 0x3F);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
+	ave_player /=2; if(ave_player<1){ave_player=1;}
+	cut[0]=(ave_player & 0xFF);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
 	sp.write(cut); 
   });
   socket.on('ave_right',function(){
 	console.log('Avalanche: Move Right');
-	ave_player >> 1;
-	cut[0]=(ave_player & 0x3F);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
+	ave_player *=2; if(ave_player>32){ave_player=32;}
+	cut[0]=(ave_player & 0xFF);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
 	sp.write(cut); 
   });
   
