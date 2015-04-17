@@ -51,6 +51,35 @@ app.io.sockets.on('connection',function(socket){
     console.log('command received: blink');
     sp.write('c');
   });
+  
+  var ave_player=8; //the bits storing where the player is... default is in the middle 0b001000=8
+  var ave_score=0;
+  var cut = new Uint8Array(1); //since js is stupid and soooo weakly typed I need this to cut down the variable size to a byte - all other numbers are stored as 64-bit floats
+  
+  socket.on('ave_start',function(){
+	console.log('Starting Avalanche');
+	sp.write('A');
+	cut[0]=(ave_player & 0x3F);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
+	sp.write(cut); 
+  });
+  socket.on('ave_exit',function(){
+	console.log('Ending Avalanche');
+	sp.write('a');
+  });
+  socket.on('ave_left',function(){
+	console.log('Avalanche: Move Left');  
+	ave_player << 1;
+	cut[0]=(ave_player & 0x3F);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
+	sp.write(cut); 
+  });
+  socket.on('ave_right',function(){
+	console.log('Avalanche: Move Right');
+	ave_player >> 1;
+	cut[0]=(ave_player & 0x3F);//write the one byte of player output - this is where modification to multiple arduino slaves will happen
+	sp.write(cut); 
+  });
+  
+  
   socket.on('game1_control',function(data){
     //send the command to the game's js file
     console.log("game1_control = " + data.value)
