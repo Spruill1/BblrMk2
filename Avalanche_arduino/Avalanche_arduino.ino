@@ -34,7 +34,7 @@ void setupAvalanche(){
   
   ave_player=0;  ave_score=0;  ave_refireChance = 20;
   for(int i = 0; i < tubes; i++){
-    ave_lastFired[i]=millis();ave_inBubble[i]=-1;
+    ave_lastFired[i]=-1; ave_inBubble[i]=0;
     ave_betBubble[i]=random(ave_minBetween,ave_maxBetween);
   }
 }
@@ -56,10 +56,18 @@ void avalanche(){
     
     //issue a bubble in each tube if I should
     for(int i = 0; i < tubes; i++){
-        if(ave_inBubble[i]>0 && 
-        if(millis()-ave_lastFired[i] > tubeLengths[i]){
+        if(ave_lastFired[i] > 0 && 
+           millis()-ave_lastFired[i] > tubeLengths[i]){
+              digitalWrite(TUBE+i,LOW);//turn off a bubble
+              ave_lastFired[i]=-1;
+              ave_inBubble = millis();
+        }
+        if(ave_lastFired[i]<0 && millis() - ave_inBubble[i] > ave_betBubble[i]){
+          //see if we want to fire a new bubble
           if(random(1,101) < ave_refireChance){
-            
+            ave_inBubble[i] = -1;
+            ave_lastFired[i] = millis();
+            digitalWrite(TUBE+i,HIGH);      
           }
         }
     }
