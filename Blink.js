@@ -65,7 +65,7 @@ app.io.sockets.on('connection',function(socket){
   });
   socket.on('ave_exit',function(){
 	console.log('Ending Avalanche');
-	sp.write('a');
+	sp.write(0x80);
   });
   socket.on('ave_left',function(){
 	console.log('Avalanche: Move Left');  
