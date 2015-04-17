@@ -12,7 +12,12 @@ void setup(){
 }
 
 void loop(){
-  
+  if(Serial.available()){
+    byte recv = Serial.read();
+    if(recv == 'A'){ //start the avalanche game
+      avalanche();
+    }
+  }
 }
 
 
